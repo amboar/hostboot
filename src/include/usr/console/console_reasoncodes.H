@@ -34,12 +34,14 @@ namespace CONSOLE
     {
         MOD_CONSOLE_INVALID_MODULE      = 0x00,
         MOD_CONSOLE_UART_PUTC           = 0x01,
+        MOD_CONSOLE_UART_INIT           = 0x02,
     };
 
     enum ConsoleReasonCode
     {
         RC_INVALID_DATA                 = CONSOLE_COMP_ID | 0x01,
         RC_TIMEOUT                      = CONSOLE_COMP_ID | 0x02,
+        RC_INVALID_CONFIG               = CONSOLE_COMP_ID | 0x03,
     };
 }
 

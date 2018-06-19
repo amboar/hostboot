@@ -41,7 +41,7 @@ namespace CONSOLE
     const uint32_t VUART1_ADDRH     = VUART1_BASE + 0x2c;
 
     // used to test config flags related to console output selection
-    const uint8_t CONFIG_MASK       = 0xC0;
+    const uint8_t CONFIG_MASK       = 0xE0;
 
     /** Overload the base class with Ast2400 specifics.
      *
@@ -54,6 +54,8 @@ namespace CONSOLE
         enum consoleConfig_t
         {
             NONE            = 0x00,  // No output selected
+            // BMC configured UART with base 0x3f8, SIRQ 4, active low.
+            UART_0x3F8_4L   = 0x20,
             SELECT_SUART    = 0x40,  // SIO Uart
             SELECT_VUART    = 0x80,  // SOL virtual uart
             RESERVED        = 0xc0,  // Reserved
@@ -308,6 +310,21 @@ namespace CONSOLE
 
                     switch ( config )
                     {
+                        case UART_0x3F8_4L:
+                            {
+                                if (g_uartBase == 0x3f8)
+                                {
+                                    printk("ast2400: UART configured by BMC\n");
+                                }
+                                else
+                                {
+                                    l_err = new ERRORLOG::ErrlEntry(
+                                            ERRORLOG::ERRL_SEV_INFORMATIONAL,
+                                            CONSOLE::MOD_CONSOLE_UART_INIT,
+                                            CONSOLE::RC_INVALID_CONFIG);
+                                }
+                                break;
+                            }
                         case SELECT_SUART:
                             {
                                 printk("ast2400: SUART config in process\n");
